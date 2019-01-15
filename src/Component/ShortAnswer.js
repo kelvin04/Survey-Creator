@@ -11,7 +11,7 @@ class ShortAnswer extends Component {
     }
 
     onButtonSave = () => {
-        console.log(this.state.question);
+        this.props.sendQuestionValue(this.state.question);
     }
 
     render() {

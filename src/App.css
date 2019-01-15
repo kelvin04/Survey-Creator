@@ -33,4 +33,23 @@
   }
 }
 
+.questionListContainer {
+  padding: 15px;
+  border: solid black 1px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  position: relative;
+}
 
+.addNewQuestion {
+  padding: 15px;
+  border: solid black 1px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.topRightCorner {
+  position: absolute;
+  top: 17px;
+  right: 16px;
+}

@@ -37,12 +37,12 @@ class CheckboxChoice extends Component {
     }
 
     renderAnswerList = () => {
-        const list = this.state.answerList.map((answer, key) => {
+        const list = this.state.answerList.map((answer, index) => {
             return(
-                <div key={key}>
+                <div key={index}>
                     <Checkbox.Group style={{ width: '100%' }} onChange={this.onChooseAnswer}>
                         <Checkbox value={answer}>{answer}</Checkbox>
-                        <Button size='small' type='danger' shape='circle' icon='close' onClick={() => this.onDeleteAnswer(key)} />
+                        <Button size='small' type='danger' shape='circle' icon='close' onClick={() => this.onDeleteAnswer(index)} />
                         <br/>
                     </Checkbox.Group>
                 </div>
