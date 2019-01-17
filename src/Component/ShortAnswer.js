@@ -4,14 +4,21 @@ import { Input, Button } from 'antd';
 const { TextArea } = Input;
 
 class ShortAnswer extends Component {
-    state = { question: '' }
+    state = { 
+        question: '',
+        addAnswer: []
+    }
 
     onInputQuestion= (e) => {
-        this.setState({ question: e.target.value });
+        this.setState({ 
+            question: e.target.value,
+            addAnswer: [] 
+        });
     }
 
     onButtonSave = () => {
         this.props.sendQuestionValue(this.state.question);
+        this.props.sendAnswerValue(this.state.addAnswer);
     }
 
     render() {

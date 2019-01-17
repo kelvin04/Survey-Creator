@@ -7,28 +7,40 @@ import CheckboxChoice from './CheckboxChoice';
 import YesOrNoChoice from './YesOrNoChoice';
 import ShortAnswer from './ShortAnswer';
 
-
 class SurveyCreate extends Component {
     constructor() {
         super();
         this.getQuestionType = this.getQuestionType.bind(this);
         this.getQuestionValue = this.getQuestionValue.bind(this);
-        this.state = { selectedQuestion: '', getQuestionValue: '', questionList: [] };
+        this.getAnswerValue = this.getAnswerValue.bind(this);
+        this.state = { 
+            selectedQuestion: '', 
+            getQuestionValue: '', 
+            questionList: [],
+            answerList: []
+        };
     }
 
     getQuestionType = (data) => {
         this.setState({ selectedQuestion: data });
     }
 
-    getQuestionValue = async(data) => {
+    getQuestionValue = (data) => {
         this.setState({ getQuestionValue: data });
         if(data) {
-            this.state.questionList.push(data)
+            this.state.questionList.push(data);
+        }
+    }
+
+    getAnswerValue = (data) => {
+        this.setState({ getQuestionType: data });
+        if(data) {
+            this.state.answerList.push(data);
         }
     }
 
     onMoveQuestionDown = (oldIndex) => {
-        const { questionList } = this.state;
+        const { questionList, answerList } = this.state;
         const newIndex = oldIndex + 1;
         if (oldIndex !== questionList.length-1 && newIndex >= questionList.length) {
             var k = newIndex - questionList.length;
@@ -37,12 +49,12 @@ class SurveyCreate extends Component {
             }
         }
         questionList.splice(newIndex, 0, questionList.splice(oldIndex, 1)[0]);
+        answerList.splice(newIndex, 0, answerList.splice(oldIndex, 1)[0]);
         this.forceUpdate();
-        console.log(oldIndex + " " + questionList.length)
     }
 
     onMoveQuestionUp = (oldIndex) => {
-        const { questionList } = this.state;
+        const { questionList, answerList } = this.state;
         const newIndex = oldIndex -1;
         if (oldIndex !== 0 && newIndex >= questionList.length) {
             var k = newIndex - questionList.length;
@@ -51,6 +63,7 @@ class SurveyCreate extends Component {
             }
         }
         questionList.splice(newIndex, 0, questionList.splice(oldIndex, 1)[0]);
+        answerList.splice(newIndex, 0, answerList.splice(oldIndex, 1)[0]);
         this.forceUpdate();
     }
 
@@ -63,9 +76,15 @@ class SurveyCreate extends Component {
         const { selectedQuestion } = this.state;
         switch (selectedQuestion) {
             case 'ShortAnwer':
-                return <ShortAnswer sendQuestionValue={this.getQuestionValue} />;
+                return <ShortAnswer 
+                    sendQuestionValue={this.getQuestionValue}
+                    sendAnswerValue={this.getAnswerValue}
+                />;
             case 'MultipleAnswer':
-                return <MultipleChoice sendQuestionValue={this.getQuestionValue} />;
+                return <MultipleChoice 
+                    sendQuestionValue={this.getQuestionValue} 
+                    sendAnswerValue={this.getAnswerValue}
+                />;
             case 'YesNoQuestion':
                 return <YesOrNoChoice />;
             case 'CheckboxQuestion':
@@ -75,31 +94,35 @@ class SurveyCreate extends Component {
         }
     }
 
-    renderAnswerList = () => {
-        
-    }
-
     renderQuestionList = () => {
-        const list = this.state.questionList.map((question, index) => {
-            return(
-                <div className='questionListContainer' key={index}>
-                    <h2>Question {index+1}</h2>
+        return (
+            <div>
+                {this.state.questionList.map((question, index1) =>
+                  <div className='questionListContainer' key={index1}>
+                    <h2>Question {index1+1}</h2>
                     <p>{question}</p>
+                    <ul>
+                        {this.state.answerList[index1].map((answer, index2) =>
+                            <li key={index2}>{answer}</li>
+                        )}
+                    </ul>
                     <div className='topRightCorner'>
-                        <Button icon='caret-down' type='primary' onClick={() => this.onMoveQuestionDown(index)} />
-                        <Button icon='caret-up' type='primary' style={{ marginLeft: '5px' }} onClick={() => this.onMoveQuestionUp(index)} />
-                        <Button icon='close' type='danger' style={{ marginLeft: '20px' }} onClick={() => this.onDeleteQuestion(index)} />
-                    </div>
-                </div>
-            );
-        })
-        return list;
+                            <Button icon='caret-down' type='primary' onClick={() => this.onMoveQuestionDown(index1)} />
+                            <Button icon='caret-up' type='primary' style={{ marginLeft: '5px' }} onClick={() => this.onMoveQuestionUp(index1)} />
+                            <Button icon='close' type='danger' style={{ marginLeft: '20px' }} onClick={() => this.onDeleteQuestion(index1)} />
+                        </div>
+                  </div>
+                )}
+            </div>
+        );
+
     }
 
     render() {
-        console.log(this.state.selectedQuestion)
+        console.log(this.state.questionList);
+        console.log(this.state.answerList);
         return(
-            <div style={{ marginTop: '20px', marginLeft: '20px', marginRight: '20px' }}>
+            <div style={{ margin: '20px' }}>
                 <Button type='primary' style={{ float: 'right' }}>Save</Button>
                 <h2>Sruvey Title</h2>
                 <p>Survey Description</p>

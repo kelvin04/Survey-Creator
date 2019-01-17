@@ -10,7 +10,11 @@ const radioStyle = {
 }
 
 class MultipleChoice extends Component {
-    state = { value: '', question: '', answer: '', answerList: [] }
+    state = { 
+        value: '', 
+        question: '', 
+        answer: '', 
+        addAnswer: [] }
 
     onInputQuestion = (e) => {
         this.setState({ question: e.target.value });
@@ -20,16 +24,16 @@ class MultipleChoice extends Component {
         this.setState({ answer: e.target.value });
     }
 
-    onAddAnswer = () => {
-        const { answer, answerList } = this.state;
+    onAddAnswer = async() => {
+        const { answer, addAnswer } = this.state;
         if(answer) {
-            answerList.push(answer);
+            addAnswer.push(answer);
             this.forceUpdate();
         }
     }
 
     onDeleteAnswer = (value) => {
-        this.state.answerList.splice(value, 1);
+        this.state.addAnswer.splice(value, 1);
         this.forceUpdate();
     }
 
@@ -37,13 +41,16 @@ class MultipleChoice extends Component {
         this.setState({ value: e.target.value });
     }
 
-    onButtonSave = () => {
+    onButtonSave = async() => {
+        this.props.sendQuestionValue(this.state.question);
+        await this.props.sendAnswerValue(this.state.addAnswer);
+        this.setState({ addAnswer: [] })
         console.log('Question = ' + this.state.question);
-        console.log('Answer List = ' + this.state.answerList);
+        console.log('Answer List = ' + this.state.addAnswer);
     }
 
     renderAnswerList = () => {
-        const list = this.state.answerList.map((answer, key) => {
+        const list = this.state.addAnswer.map((answer, key) => {
             return(
                 <div key={key}>
                     <Radio style={radioStyle} value={answer}>{answer}</Radio>
@@ -55,6 +62,7 @@ class MultipleChoice extends Component {
     }
 
     render() {
+        console.log(this.state.addAnswer)
         return(
             <div>
                 <TextArea autosize placeholder='Input question' onChange={this.onInputQuestion} style={{ marginBottom: '10px' }} />
